@@ -4,13 +4,17 @@ Created on Fri Sep 27 15:24:42 2019
 
 @author: Mohamed
 """
+import words_hangman
 
-def hangman(word):
-    """A function that plays 'Hangman' with the user. This version uses the
-        pre-determined word, 'cat'.
-    :param word: string-type - the word the user is trying to guess
-    :return, answer: string-type - triggered when the user wins, or loses, the
-        game
+
+def hangman(word, index):
+    """A function that plays 'Hangman' with the user. This version chooses
+        words from a pre-determined list in the 'words_hangman' module
+    :param word: string-type (str) - the word the user is trying to guess
+    :param index: integer-type (int) - index of the word obtained from the list
+        in the 'words_hangman' module
+    :return, answer: string-type - triggered when the user wins, loses or quits
+        the game
     """
     wrong = 0
     torso_pieces = 0
@@ -35,9 +39,11 @@ def hangman(word):
     
     while wrong < guesses:
         print("\n")
-        msg = "Guess a letter ~>  "
+        msg = "Guess a letter, or enter 'Quit' to give up ~>  "
         char = input(msg)
-        if char in rletters:
+        if char == "Quit" or char == 'quit':
+            wrong = guesses
+        elif char in rletters:
             cind = rletters.index(char)
             board[cind] = char
             rletters[cind] = "$"
@@ -71,7 +77,8 @@ def hangman(word):
             print(draw)
             
         if "_" not in board:
-            answer = "\nYou win! The word was: ~ {} ~\n".format(word)
+            answer = """\nYou win! The word was: ~ {} ~
+            """.format(words_hangman.correct_word(index))
             print("\n" + " ".join(board))
             win = True
             break
@@ -81,7 +88,8 @@ def hangman(word):
         stages[5] = stages[5].replace("x", "")
         print("\n".join(stages[0:(wrong + 1)]))
         print("\n" + " ".join(board))
-        answer = "\n< You lose! The word was ~ {} ~. >".format(word)
+        answer = """\n< You lose! The word was ~ {} ~. >
+        """.format(words_hangman.correct_word(index))
                                                
     return answer
 
